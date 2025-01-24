@@ -38,6 +38,10 @@ const Register = () => {
 
     return (
         <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
+            <div className="text-center text-gray-600 mb-4">
+                <p>Please wait for a moment after login for the backend to start up.</p>
+                <p className="text-sm text-gray-500">First-time Sign-up may take a minute due to the cold start. Hang tight!</p>
+            </div>
             <h2 className="text-xl font-bold mb-4">Register</h2>
             <form onSubmit={handleSubmit} className="bg-white p-6 rounded shadow-md">
                 <input
