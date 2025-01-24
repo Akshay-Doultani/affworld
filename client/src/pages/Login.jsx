@@ -35,6 +35,10 @@ const Login = () => {
 
     return (
         <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
+            <div className="text-center text-gray-600 mb-4">
+                <p>Please wait for a moment after login for the backend to start up.</p>
+                <p className="text-sm text-gray-500">First-time login may take a minute due to the cold start. Hang tight!</p>
+            </div>
             <h2 className="text-xl font-bold mb-4">Login</h2>
             <form onSubmit={handleSubmit} className="bg-white p-6 rounded shadow-md" style={{ width: '400px' }}> {/* Adjusted form size */}
                 <input
