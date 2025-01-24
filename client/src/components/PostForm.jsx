@@ -81,7 +81,7 @@ const PostForm = () => {
             let method = 'POST';
 
             if (postId) {
-                url = `/api/feed/${postId}`;
+                url = `/feed/${postId}`;
                 method = 'PUT';
             }
 
