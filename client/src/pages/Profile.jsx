@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useContext } from 'react';
-import axios from 'axios';
+import API from '../utils/api'; // Import your API utility
 import { useNavigate } from 'react-router-dom';
 import { FaEdit, FaTrashAlt, FaPlusCircle, FaArrowLeft, FaTasks, FaSignOutAlt } from 'react-icons/fa';
 import ImageModal from '../components/ImageModal';
@@ -21,12 +21,12 @@ const Profile = () => {
 
     const fetchUserPosts = async () => {
         try {
-            const response = await axios.get('/api/feed/user', {
+            const response = await API.get('/feed/user', {
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem('token')}`,
                 },
             });
-            //console.log("Response Data:", response.data); 
+
             if (Array.isArray(response.data)) {
                 setPosts(response.data);
             } else {
@@ -50,7 +50,7 @@ const Profile = () => {
                 return;
             }
 
-            const response = await axios.delete(`http://localhost:5000/api/feed/${postId}`, {
+            const response = await API.delete(`/api/feed/${postId}`, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },
