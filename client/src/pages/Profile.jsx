@@ -50,7 +50,7 @@ const Profile = () => {
                 return;
             }
 
-            const response = await API.delete(`/api/feed/${postId}`, {
+            const response = await API.delete(`/feed/${postId}`, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },
