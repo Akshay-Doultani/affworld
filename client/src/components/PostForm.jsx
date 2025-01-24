@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react';
+import axios from 'axios';
 import { useNavigate, useParams } from 'react-router-dom';
-import { jwtDecode } from 'jwt-decode';
+import { jwtDecode } from "jwt-decode";
 import { FaCloudUploadAlt, FaArrowLeft } from 'react-icons/fa';
 import { useDropzone } from 'react-dropzone';
 import { AuthContext } from '../context/AuthContext';
@@ -26,10 +27,14 @@ const PostForm = () => {
 
     const fetchPostDetails = async (postId) => {
         try {
-            const response = await API.get(`/feed/${postId}`);
+            const response = await API.get(`/feed/${postId}`, {
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem('token')}`,
+                },
+            });
             setCaption(response.data.caption);
             setImageUrl(response.data.imageUrl);
-            setCloudinaryId(response.data.cloudinaryId);
+            setCloudinaryId(response.data.cloudinaryId);  // store cloudinaryId if updating
         } catch (err) {
             setError('Failed to fetch post details.');
         }
@@ -62,11 +67,12 @@ const PostForm = () => {
             return;
         }
 
+
         const data = {
-            caption,
-            imageUrl,
-            cloudinaryId,
-            userId,
+            caption: caption,
+            imageUrl: imageUrl,
+            cloudinaryId: cloudinaryId,
+            userId: userId,
             postedBy: user.name,
         };
 
@@ -75,19 +81,27 @@ const PostForm = () => {
             let method = 'POST';
 
             if (postId) {
-                url = `/feed/${postId}`;
+                url = `/api/feed/${postId}`;
                 method = 'PUT';
             }
 
             const response = await API({
-                method,
-                url,
-                data,
+                method: method,
+                url: url,
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    'Content-Type': 'application/json',
+                },
+                data: data,
             });
 
             setLoading(false);
 
             if (response.status === 200 || response.status === 201) {
+                const updatedPost = response.data;
+                setCaption(updatedPost.caption);
+                setImageUrl(updatedPost.imageUrl);
+                setCloudinaryId(updatedPost.cloudinaryId);
                 navigate('/profile');
             } else {
                 setError(response.data.message || 'Failed to create/update post');
@@ -107,10 +121,10 @@ const PostForm = () => {
         formData.append('upload_preset', 'my_preset');
 
         try {
-            const response = await API.post('https://api.cloudinary.com/v1_1/dtxd8vy60/image/upload', formData);
-            const { url, public_id } = response.data;
-            setImageUrl(url);
-            setCloudinaryId(public_id);
+            const response = await axios.post('https://api.cloudinary.com/v1_1/dtxd8vy60/image/upload', formData);
+            const { url, public_id } = response.data;  // Get the URL and Cloudinary ID
+            setImageUrl(url);  // Store the image URL
+            setCloudinaryId(public_id);  // Store the Cloudinary ID
         } catch (error) {
             console.error('Error uploading image:', error);
             setError('Failed to upload image');
